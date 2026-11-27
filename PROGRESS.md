@@ -24,7 +24,7 @@ Proposed build order. Adjust as we go. Each section matches the step with the sa
 - ✅ `.env.example`
 - ✅ Logging (`common/logging.py`)
 - [ ] Settings (`common/config.py`)
-- [ ] Docker Compose for Postgres (pgvector) and Redis (file written, containers not started yet)
+- ✅ Docker Compose for Postgres (pgvector) and Redis
 - [ ] Database models (`db/models.py`)
 - [ ] Database session and first migration
 
