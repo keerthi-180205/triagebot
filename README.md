@@ -2,7 +2,7 @@
 
 LLM agent that triages GitHub issues: it classifies each new issue, retrieves relevant code from the repository, and posts a labeled, helpful comment.
 
-> **Status: skeleton only.** The folder structure and dependencies exist; no application code has been written yet. Everything below describes the plan. See [PROGRESS.md](PROGRESS.md) for what is done.
+> **Status: early foundation work.** The folder structure, dependencies, setup files and logging module exist; the application does not run yet. Features below describe the plan. See [PROGRESS.md](PROGRESS.md) for what is done.
 
 ## Problem
 
@@ -62,7 +62,19 @@ py -3.11 -m venv .venv
 pip install -r requirements.txt
 ```
 
-Running the app is not possible yet. Instructions for environment variables, Docker Compose and the GitHub App will be added as those parts are built.
+Create your local settings file, then fill in real values in `.env` (never commit it):
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Start Postgres (with pgvector) and Redis. Docker Desktop must be running:
+
+```powershell
+docker compose up -d
+```
+
+Running the app is not possible yet. Instructions for the database, GitHub App and app startup will be added as those parts are built.
 
 ## Project structure
 
@@ -101,10 +113,10 @@ triagebot/
   tests/                tests and fixtures
   docs/                 architecture, decisions, evaluation, API, bugs
   Dockerfile            (empty placeholder)
-  docker-compose.yml    (empty placeholder)
+  docker-compose.yml    local Postgres and Redis
   alembic.ini           (empty placeholder)
-  pyproject.toml        (empty placeholder)
-  .env.example          (empty placeholder)
+  pyproject.toml        pytest and Ruff settings
+  .env.example          environment variable template
   requirements.txt      pinned dependencies
   IMPLEMENTATION.md     step-by-step build guide
   PROGRESS.md           build progress

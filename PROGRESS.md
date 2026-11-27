@@ -4,7 +4,7 @@ Last updated: 2026-11-27
 
 ## Current stage
 
-Skeleton complete. No application code yet.
+Step 1 (Foundation) in progress. The application does not run yet.
 
 ## Done
 
@@ -19,10 +19,14 @@ Skeleton complete. No application code yet.
 Proposed build order. Adjust as we go. Each section matches the step with the same number in [IMPLEMENTATION.md](IMPLEMENTATION.md).
 
 ### 1. Foundation
-- [ ] Settings and logging (`common/`)
-- [ ] `.env.example`
-- [ ] Docker Compose for Postgres (pgvector) and Redis
-- [ ] Database models and first migration
+- ✅ `pyproject.toml` (pytest and Ruff settings)
+- ✅ Ignore private keys (`*.pem`)
+- ✅ `.env.example`
+- ✅ Logging (`common/logging.py`)
+- [ ] Settings (`common/config.py`)
+- [ ] Docker Compose for Postgres (pgvector) and Redis (file written, containers not started yet)
+- [ ] Database models (`db/models.py`)
+- [ ] Database session and first migration
 
 ### 2. Webhook service
 - [ ] `/health`
@@ -76,3 +80,4 @@ Proposed build order. Adjust as we go. Each section matches the step with the sa
 
 - 2026-11-27: Environment, dependencies and skeleton created.
 - 2026-11-27: Implementation guide written.
+- 2026-11-27: Step 1 setup files and logging added.
