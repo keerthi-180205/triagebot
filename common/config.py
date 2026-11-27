@@ -10,6 +10,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    """All configuration, read from environment variables and .env.
+
+    Only database_url and github_webhook_secret are required. Everything else has a safe default
+    (dry_run is on, so nothing is posted to GitHub unless you turn it off).
+    """
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     database_url: str
@@ -28,6 +34,7 @@ class Settings(BaseSettings):
     @field_validator("github_webhook_secret")
     @classmethod
     def reject_placeholder_secret(cls, value: SecretStr) -> SecretStr:
+        """Refuse the "change-me" placeholder from .env.example, which anyone could guess."""
         if value.get_secret_value() == "change-me":
             raise ValueError("github_webhook_secret is set to the placeholder value")
         return value
@@ -35,4 +42,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
+    """Return the settings, built once and cached. Restart the app to pick up .env changes."""
     return Settings()

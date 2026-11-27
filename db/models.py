@@ -4,13 +4,13 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import BigInteger, DateTime, ForeignKey, Index, Numeric, String, func
+from sqlalchemy import BigInteger, DateTime, ForeignKey, Index, Numeric, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
-    pass
+    """Parent of every table class. Base.metadata lists all tables, and Alembic reads it."""
 
 
 # Allowed values for Run.status, in the order a run normally moves through them.
@@ -18,32 +18,48 @@ RUN_STATUSES = ("received", "queued", "running", "succeeded", "fallback", "faile
 
 
 class Run(Base):
+    """One triage of one GitHub issue, from webhook delivery to final outcome.
+
+    delivery_id is unique, so a webhook delivered twice cannot create two runs. status follows
+    RUN_STATUSES. The result columns (category, tokens, cost, latency, error) stay empty until
+    the run finishes, so they must be nullable.
+    """
+
     __tablename__ = "runs"
-    # TODO: add Index("ix_runs_repo_created_at", "repo", "created_at") to __table_args__
-    __table_args__ = ()
+    __table_args__ = (Index("ix_runs_repo_created_at", "repo", "created_at"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    # TODO: delivery_id (str) - unique, not null. This is what makes webhooks idempotent.
-    # TODO: repo (str), issue_number (int), installation_id (BigInteger)
-    # TODO: status (str) - default "received"
-    # TODO: input (JSONB) - the issue payload the run was started with
-    # TODO: category (str, nullable), confidence (float, nullable)
-    # TODO: model (str, nullable)
-    # TODO: input_tokens, output_tokens (int, nullable)
-    # TODO: cost_usd (Numeric, nullable) - Decimal, not float, for money
-    # TODO: latency_ms (int, nullable)
-    # TODO: error (str, nullable)
-    # TODO: created_at (DateTime with timezone) - filled by the database (server_default=func.now())
-    # TODO: finished_at (DateTime with timezone, nullable)
+    delivery_id: Mapped[str] = mapped_column(unique=True)
+    repo: Mapped[str]
+    status: Mapped[str] = mapped_column(default="received")
+    input: Mapped[dict[str, Any]] = mapped_column(JSONB)
+    category: Mapped[str | None]
+    confidence: Mapped[float | None]
+    model: Mapped[str | None]
+    input_tokens: Mapped[int | None]
+    output_tokens: Mapped[int | None]
+    cost_usd: Mapped[Decimal | None] = mapped_column(Numeric(12, 6))
+    latency_ms: Mapped[int | None]
+    error: Mapped[str | None]
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    issue_number: Mapped[int]
+    installation_id: Mapped[int] = mapped_column(BigInteger)
 
 
 class ToolCall(Base):
+    """One tool the agent called during a run, with its input, output and timing.
+
+    A failed call is stored too (success=False, output may be empty) so failures can be measured.
+    """
+
     __tablename__ = "tool_calls"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    # TODO: run_id (int) - ForeignKey("runs.id"), not null, indexed
-    # TODO: tool (str)
-    # TODO: input (JSONB), output (JSONB, nullable - a failed call may have no output)
-    # TODO: success (bool)
-    # TODO: latency_ms (int)
-    # TODO: created_at (DateTime with timezone) - filled by the database
+    run_id: Mapped[int] = mapped_column(ForeignKey("runs.id"), index=True)
+    tool: Mapped[str]
+    input: Mapped[dict[str, Any]] = mapped_column(JSONB)
+    output: Mapped[dict[str, Any] | None] = mapped_column(JSONB)
+    success: Mapped[bool]
+    latency_ms: Mapped[int]
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
