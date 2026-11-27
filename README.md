@@ -106,11 +106,13 @@ triagebot/
   pyproject.toml        (empty placeholder)
   .env.example          (empty placeholder)
   requirements.txt      pinned dependencies
+  IMPLEMENTATION.md     step-by-step build guide
   PROGRESS.md           build progress
 ```
 
 ## Documentation
 
+- [Implementation guide](IMPLEMENTATION.md)
 - [Architecture](docs/architecture.md)
 - [Design decisions](docs/decisions.md)
 - [Evaluation](docs/evaluation.md)

@@ -8,14 +8,15 @@ Skeleton complete. No application code yet.
 
 ## Done
 
-- [x] Python 3.11 virtual environment (`.venv`)
-- [x] `requirements.txt` with pinned versions, installed (`pip check` clean)
-- [x] Project skeleton (empty files)
-- [x] README, PROGRESS and docs outlines
+- ✅ Python 3.11 virtual environment (`.venv`)
+- ✅ `requirements.txt` with pinned versions, installed (`pip check` clean)
+- ✅ Project skeleton (empty files)
+- ✅ README, PROGRESS and docs outlines
+- ✅ [Implementation guide](IMPLEMENTATION.md)
 
 ## Roadmap
 
-Proposed build order. Adjust as we go.
+Proposed build order. Adjust as we go. Each section matches the step with the same number in [IMPLEMENTATION.md](IMPLEMENTATION.md).
 
 ### 1. Foundation
 - [ ] Settings and logging (`common/`)
@@ -74,3 +75,4 @@ Proposed build order. Adjust as we go.
 ## Log
 
 - 2026-11-27: Environment, dependencies and skeleton created.
+- 2026-11-27: Implementation guide written.
