@@ -40,7 +40,7 @@ More detail: [docs/architecture.md](docs/architecture.md).
 | Web | FastAPI, Uvicorn |
 | Queue | Redis, arq |
 | Agent | LangGraph |
-| LLM | Anthropic SDK (provisional) |
+| LLM | Google Gemini via the google-genai SDK (provisional) |
 | Embeddings | Not chosen yet |
 | Database | Postgres with pgvector, SQLAlchemy, Alembic |
 | Evaluation | scikit-learn |

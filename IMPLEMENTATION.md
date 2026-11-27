@@ -57,7 +57,7 @@ Run every command in this guide from the project root.
 
 | Decision | Needed by | Notes |
 | --- | --- | --- |
-| LLM provider and model | Step 5 | This guide assumes the installed Anthropic SDK. Keep all SDK calls in `agent/llm.py` so a swap touches one file. |
+| LLM provider and model | Step 5 | This project uses Google Gemini through the installed `google-genai` SDK (the §5.2 snippet below is still the original Anthropic example and will be replaced by a Gemini one). Keep all SDK calls in `agent/llm.py` so a swap touches one file. |
 | Embedding model | Step 4 | Fixes the vector column size. |
 | Chunking strategy | Step 4 | Start simple, compare later. |
 | Issue categories | Step 5 | Draft: bug, feature, question, docs, spam. |
@@ -104,9 +104,8 @@ REDIS_URL=redis://localhost:6379/0
 GITHUB_WEBHOOK_SECRET=change-me
 GITHUB_APP_ID=
 GITHUB_PRIVATE_KEY_PATH=
-ANTHROPIC_API_KEY=
-LLM_MODEL=claude-opus-5-5
-LLM_EFFORT=medium
+GEMINI_API_KEY=
+LLM_MODEL=gemini-3.8-flash
 DRY_RUN=true
 AGENT_TIMEOUT_S=120
 AGENT_MAX_STEPS=10
@@ -134,9 +133,8 @@ class Settings(BaseSettings):
     github_webhook_secret: SecretStr = Field(min_length=1)
     github_app_id: str = ""
     github_private_key_path: str = ""
-    anthropic_api_key: SecretStr = SecretStr("")
-    llm_model: str = "claude-opus-5-5"
-    llm_effort: str = "medium"
+    gemini_api_key: SecretStr = SecretStr("")
+    llm_model: str = "gemini-3.8-flash"
     dry_run: bool = True
     agent_timeout_s: int = 120
     agent_max_steps: int = 10
@@ -483,7 +481,7 @@ A retry can happen after the comment was posted. Add a hidden marker such as `<!
 | Hosted API (for example Voyage AI or OpenAI) | Small install, good quality | Cost per call, another key, code leaves your machine |
 | Local model (for example sentence-transformers) | Free per call, private | Large download, slower on CPU |
 
-Anthropic does not offer its own embedding model. Pick one, add its library to `requirements.txt`, and record the decision. The model sets the vector size; pgvector's `vector` indexes support at most 2,000 dimensions.
+Gemini offers embedding models (for example `gemini-embedding-2`), so one provider can cover both generation and retrieval; a local model is the other option. Pick one, add its library to `requirements.txt`, and record the decision. The model sets the vector size; pgvector's `vector` indexes support at most 2,000 dimensions.
 
 ### 4.2 Pipeline
 
@@ -586,6 +584,8 @@ class Decision(BaseModel):
 `agent/state.py`: a `TypedDict` with the issue fields, `classification`, `chunks`, `decision` and `result`.
 
 ### 5.2 LLM client
+
+> **Note:** the snippet and bullets below are the original Anthropic version (`anthropic`, effort setting, fallbacks, price table) and no longer match the installed SDK. Ask for the Gemini boilerplate when you reach Step 5. The structure to keep is the same: one `LLMClient.structured(...)` that returns the parsed object, the token usage and the model name.
 
 `agent/llm.py`:
 

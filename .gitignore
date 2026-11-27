@@ -224,3 +224,6 @@ __marimo__/
 
 # Private keys (GitHub App)
 *.pem
+
+# Private project notes
+docs/TriageBot Project Documentation.md

@@ -69,7 +69,7 @@ Proposed build order. Adjust as we go. Each section matches the step with the sa
 
 | Decision | Current state |
 | --- | --- |
-| LLM provider and model | Anthropic SDK installed as a provisional choice |
+| LLM provider and model | Gemini (`google-genai`, default `gemini-3.8-flash`) installed as a provisional choice |
 | Embedding model | Not chosen; no embedding library installed |
 | Chunking strategy | Not chosen |
 | Vector index type | Not chosen |

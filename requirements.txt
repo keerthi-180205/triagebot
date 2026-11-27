@@ -16,8 +16,7 @@ PyJWT[crypto]==2.15.1
 
 # Agent and LLM
 langgraph==1.2.24
-anthropic==2.14.0
-tenacity==9.2.1
+google-genai==3.6.1
 
 # Database
 sqlalchemy[asyncio]==2.1.9
